@@ -49,9 +49,9 @@ UART_HandleTypeDef huart2;
 /* USER CODE BEGIN PV */
 
 uint64_t timestamp_encoder = 0,_micro = 0;
-double Kp = 1,Ki = 1,Kd = 1;
+double Kp = 28000,Ki = 10,Kd = 5;
 double encoder_vel = 0,target_vel = 0;
-
+uint16_t output  = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -122,6 +122,7 @@ int main(void)
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
 
 
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -138,8 +139,10 @@ int main(void)
 		  encoder_vel = (encoder_vel*99 + pps_to_rpm(encoder_velocity_update()))/100.0; //low pass filter
 
 		  motor_direction(target_vel);
-		  //__HAL_TIM_SET_COMPARE(&htim3,TIM_CHANNEL_1,PID_control(target_vel, encoder_vel, 1000*1e-6));
-		  __HAL_TIM_SET_COMPARE(&htim3,TIM_CHANNEL_1,10000);
+		  output = PID_control(target_vel, encoder_vel, 1000*1e-6);
+		  __HAL_TIM_SET_COMPARE(&htim3,TIM_CHANNEL_1,output);
+		  //__HAL_TIM_SET_COMPARE(&htim3,TIM_CHANNEL_1,10000);
+		  //__HAL_TIM_SET_COMPARE(&htim1,TIM_CHANNEL_1,PWMoutput);
 	  }
 
 
@@ -487,12 +490,12 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 
 void motor_direction(double target_velocity){
 	if(target_velocity > 0){
-		HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, 1);
-		HAL_GPIO_WritePin(GPIOC, GPIO_PIN_9, 0);
-	}
-	else if(target_velocity < 0){
 		HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, 0);
 		HAL_GPIO_WritePin(GPIOC, GPIO_PIN_9, 1);
+	}
+	else if(target_velocity < 0){
+		HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, 1);
+		HAL_GPIO_WritePin(GPIOC, GPIO_PIN_9, 0);
 	}
 	else{
 		HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, 1);
