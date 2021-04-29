@@ -69,7 +69,7 @@ double encoder_velocity_update();
 uint16_t PID_control();
 double pps_to_rpm();
 void motor_direction();
-
+double a;
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -140,7 +140,7 @@ int main(void)
 		  encoder_vel = (encoder_vel*99 + pps_to_rpm(encoder_velocity_update()))/100.0; //low pass filter
 
 		  motor_direction(target_vel);
-		  output = PID_control(target_vel, fabs(encoder_vel), 1000*1e-6);
+		  output = PID_control(fabs(target_vel), fabs(encoder_vel), 1000*1e-6);
 		  __HAL_TIM_SET_COMPARE(&htim3,TIM_CHANNEL_1,output);
 		  //__HAL_TIM_SET_COMPARE(&htim3,TIM_CHANNEL_1,10000);
 		  //__HAL_TIM_SET_COMPARE(&htim1,TIM_CHANNEL_1,PWMoutput);

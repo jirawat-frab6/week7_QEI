@@ -21,29 +21,29 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, ALLOC, LOAD, DATA
   8 .data         00000024  20000000  08003cfc  00020000  2**3
                   CONTENTS, ALLOC, LOAD, DATA
-  9 .bss          00000168  20000028  08003d20  00020028  2**3
+  9 .bss          00000174  20000028  08003d20  00020028  2**3
                   ALLOC
- 10 ._user_heap_stack 00000600  20000190  08003d20  00020190  2**0
+ 10 ._user_heap_stack 00000604  2000019c  08003d20  0002019c  2**0
                   ALLOC
  11 .ARM.attributes 00000030  00000000  00000000  00020024  2**0
                   CONTENTS, READONLY
- 12 .debug_info   00009f2f  00000000  00000000  00020054  2**0
+ 12 .debug_info   00009f3e  00000000  00000000  00020054  2**0
                   CONTENTS, READONLY, DEBUGGING
- 13 .debug_abbrev 000016fd  00000000  00000000  00029f83  2**0
+ 13 .debug_abbrev 000016fd  00000000  00000000  00029f92  2**0
                   CONTENTS, READONLY, DEBUGGING
- 14 .debug_aranges 00000b40  00000000  00000000  0002b680  2**3
+ 14 .debug_aranges 00000b40  00000000  00000000  0002b690  2**3
                   CONTENTS, READONLY, DEBUGGING
- 15 .debug_ranges 00000a88  00000000  00000000  0002c1c0  2**3
+ 15 .debug_ranges 00000a88  00000000  00000000  0002c1d0  2**3
                   CONTENTS, READONLY, DEBUGGING
- 16 .debug_macro  00015d47  00000000  00000000  0002cc48  2**0
+ 16 .debug_macro  00015d47  00000000  00000000  0002cc58  2**0
                   CONTENTS, READONLY, DEBUGGING
- 17 .debug_line   0000781f  00000000  00000000  0004298f  2**0
+ 17 .debug_line   0000781f  00000000  00000000  0004299f  2**0
                   CONTENTS, READONLY, DEBUGGING
- 18 .debug_str    0008c05b  00000000  00000000  0004a1ae  2**0
+ 18 .debug_str    0008c05b  00000000  00000000  0004a1be  2**0
                   CONTENTS, READONLY, DEBUGGING
- 19 .comment      0000007b  00000000  00000000  000d6209  2**0
+ 19 .comment      0000007b  00000000  00000000  000d6219  2**0
                   CONTENTS, READONLY
- 20 .debug_frame  0000316c  00000000  00000000  000d6284  2**2
+ 20 .debug_frame  00003170  00000000  00000000  000d6294  2**2
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -1127,7 +1127,7 @@ Disassembly of section .text:
   */
 int main(void)
 {
- 8000dc8:	e92d 43f8 	stmdb	sp!, {r3, r4, r5, r6, r7, r8, r9, lr}
+ 8000dc8:	e92d 4ff8 	stmdb	sp!, {r3, r4, r5, r6, r7, r8, r9, sl, fp, lr}
  8000dcc:	af00      	add	r7, sp, #0
   /* USER CODE END 1 */
 
@@ -1190,11 +1190,11 @@ int main(void)
  8000e0a:	460a      	mov	r2, r1
  8000e0c:	4601      	mov	r1, r0
  8000e0e:	4b3d      	ldr	r3, [pc, #244]	; (8000f04 <main+0x13c>)
- 8000e10:	e9d3 8900 	ldrd	r8, r9, [r3]
+ 8000e10:	e9d3 ab00 	ldrd	sl, fp, [r3]
  8000e14:	460b      	mov	r3, r1
  8000e16:	4614      	mov	r4, r2
- 8000e18:	ebb3 0308 	subs.w	r3, r3, r8
- 8000e1c:	eb64 0409 	sbc.w	r4, r4, r9
+ 8000e18:	ebb3 030a 	subs.w	r3, r3, sl
+ 8000e1c:	eb64 040b 	sbc.w	r4, r4, fp
  8000e20:	f44f 717a 	mov.w	r1, #1000	; 0x3e8
  8000e24:	f04f 0200 	mov.w	r2, #0
  8000e28:	42a2      	cmp	r2, r4
@@ -1215,8 +1215,8 @@ int main(void)
  8000e4a:	f7ff fb81 	bl	8000550 <__aeabi_dmul>
  8000e4e:	4603      	mov	r3, r0
  8000e50:	460c      	mov	r4, r1
- 8000e52:	4698      	mov	r8, r3
- 8000e54:	46a1      	mov	r9, r4
+ 8000e52:	469a      	mov	sl, r3
+ 8000e54:	46a3      	mov	fp, r4
  8000e56:	f000 fa8f 	bl	8001378 <encoder_velocity_update>
  8000e5a:	eeb0 7a40 	vmov.f32	s14, s0
  8000e5e:	eef0 7a60 	vmov.f32	s15, s1
@@ -1226,8 +1226,8 @@ int main(void)
  8000e6e:	ec54 3b10 	vmov	r3, r4, d0
  8000e72:	461a      	mov	r2, r3
  8000e74:	4623      	mov	r3, r4
- 8000e76:	4640      	mov	r0, r8
- 8000e78:	4649      	mov	r1, r9
+ 8000e76:	4650      	mov	r0, sl
+ 8000e78:	4659      	mov	r1, fp
  8000e7a:	f7ff f9b3 	bl	80001e4 <__adddf3>
  8000e7e:	4603      	mov	r3, r0
  8000e80:	460c      	mov	r4, r1
@@ -1247,38 +1247,38 @@ int main(void)
  8000ea0:	eeb0 0a47 	vmov.f32	s0, s14
  8000ea4:	eef0 0a67 	vmov.f32	s1, s15
  8000ea8:	f000 fb8c 	bl	80015c4 <motor_direction>
-		  output = PID_control(target_vel, fabs(encoder_vel), 1000*1e-6);
+		  output = PID_control(fabs(target_vel), fabs(encoder_vel), 1000*1e-6);
  8000eac:	4b18      	ldr	r3, [pc, #96]	; (8000f10 <main+0x148>)
- 8000eae:	ed93 7b00 	vldr	d7, [r3]
- 8000eb2:	4b15      	ldr	r3, [pc, #84]	; (8000f08 <main+0x140>)
- 8000eb4:	e9d3 3400 	ldrd	r3, r4, [r3]
- 8000eb8:	461d      	mov	r5, r3
- 8000eba:	f024 4600 	bic.w	r6, r4, #2147483648	; 0x80000000
- 8000ebe:	ed9f 2b0c 	vldr	d2, [pc, #48]	; 8000ef0 <main+0x128>
- 8000ec2:	ec46 5b11 	vmov	d1, r5, r6
- 8000ec6:	eeb0 0a47 	vmov.f32	s0, s14
- 8000eca:	eef0 0a67 	vmov.f32	s1, s15
- 8000ece:	f000 fab5 	bl	800143c <PID_control>
- 8000ed2:	4603      	mov	r3, r0
- 8000ed4:	461a      	mov	r2, r3
- 8000ed6:	4b0f      	ldr	r3, [pc, #60]	; (8000f14 <main+0x14c>)
- 8000ed8:	801a      	strh	r2, [r3, #0]
+ 8000eae:	e9d3 3400 	ldrd	r3, r4, [r3]
+ 8000eb2:	461d      	mov	r5, r3
+ 8000eb4:	f024 4600 	bic.w	r6, r4, #2147483648	; 0x80000000
+ 8000eb8:	4b13      	ldr	r3, [pc, #76]	; (8000f08 <main+0x140>)
+ 8000eba:	e9d3 3400 	ldrd	r3, r4, [r3]
+ 8000ebe:	4698      	mov	r8, r3
+ 8000ec0:	f024 4900 	bic.w	r9, r4, #2147483648	; 0x80000000
+ 8000ec4:	ed9f 2b0a 	vldr	d2, [pc, #40]	; 8000ef0 <main+0x128>
+ 8000ec8:	ec49 8b11 	vmov	d1, r8, r9
+ 8000ecc:	ec46 5b10 	vmov	d0, r5, r6
+ 8000ed0:	f000 fab4 	bl	800143c <PID_control>
+ 8000ed4:	4603      	mov	r3, r0
+ 8000ed6:	461a      	mov	r2, r3
+ 8000ed8:	4b0e      	ldr	r3, [pc, #56]	; (8000f14 <main+0x14c>)
+ 8000eda:	801a      	strh	r2, [r3, #0]
 		  __HAL_TIM_SET_COMPARE(&htim3,TIM_CHANNEL_1,output);
- 8000eda:	4b0e      	ldr	r3, [pc, #56]	; (8000f14 <main+0x14c>)
- 8000edc:	881a      	ldrh	r2, [r3, #0]
- 8000ede:	4b08      	ldr	r3, [pc, #32]	; (8000f00 <main+0x138>)
- 8000ee0:	681b      	ldr	r3, [r3, #0]
- 8000ee2:	635a      	str	r2, [r3, #52]	; 0x34
+ 8000edc:	4b0d      	ldr	r3, [pc, #52]	; (8000f14 <main+0x14c>)
+ 8000ede:	881a      	ldrh	r2, [r3, #0]
+ 8000ee0:	4b07      	ldr	r3, [pc, #28]	; (8000f00 <main+0x138>)
+ 8000ee2:	681b      	ldr	r3, [r3, #0]
+ 8000ee4:	635a      	str	r2, [r3, #52]	; 0x34
 	  if(micros() - timestamp_encoder > 1000){ //uS
- 8000ee4:	e78f      	b.n	8000e06 <main+0x3e>
- 8000ee6:	bf00      	nop
+ 8000ee6:	e78e      	b.n	8000e06 <main+0x3e>
  8000ee8:	00000000 	.word	0x00000000
  8000eec:	4058c000 	.word	0x4058c000
  8000ef0:	d2f1a9fc 	.word	0xd2f1a9fc
  8000ef4:	3f50624d 	.word	0x3f50624d
- 8000ef8:	2000010c 	.word	0x2000010c
- 8000efc:	200000cc 	.word	0x200000cc
- 8000f00:	2000008c 	.word	0x2000008c
+ 8000ef8:	20000110 	.word	0x20000110
+ 8000efc:	200000d0 	.word	0x200000d0
+ 8000f00:	20000090 	.word	0x20000090
  8000f04:	20000048 	.word	0x20000048
  8000f08:	20000058 	.word	0x20000058
  8000f0c:	40590000 	.word	0x40590000
@@ -1543,7 +1543,7 @@ static void MX_TIM1_Init(void)
  800108a:	46bd      	mov	sp, r7
  800108c:	bd80      	pop	{r7, pc}
  800108e:	bf00      	nop
- 8001090:	200000cc 	.word	0x200000cc
+ 8001090:	200000d0 	.word	0x200000d0
  8001094:	40010000 	.word	0x40010000
 
 08001098 <MX_TIM2_Init>:
@@ -1653,7 +1653,7 @@ static void MX_TIM2_Init(void)
  8001126:	3718      	adds	r7, #24
  8001128:	46bd      	mov	sp, r7
  800112a:	bd80      	pop	{r7, pc}
- 800112c:	2000010c 	.word	0x2000010c
+ 800112c:	20000110 	.word	0x20000110
 
 08001130 <MX_TIM3_Init>:
   * @brief TIM3 Initialization Function
@@ -1810,7 +1810,7 @@ static void MX_TIM3_Init(void)
  800120e:	3738      	adds	r7, #56	; 0x38
  8001210:	46bd      	mov	sp, r7
  8001212:	bd80      	pop	{r7, pc}
- 8001214:	2000008c 	.word	0x2000008c
+ 8001214:	20000090 	.word	0x20000090
  8001218:	40000400 	.word	0x40000400
 
 0800121c <MX_USART2_UART_Init>:
@@ -1877,7 +1877,7 @@ static void MX_USART2_UART_Init(void)
  8001262:	bf00      	nop
  8001264:	bd80      	pop	{r7, pc}
  8001266:	bf00      	nop
- 8001268:	2000014c 	.word	0x2000014c
+ 8001268:	20000150 	.word	0x20000150
  800126c:	40004400 	.word	0x40004400
 
 08001270 <MX_GPIO_Init>:
@@ -2393,7 +2393,7 @@ uint64_t micros(){
  8001678:	46bd      	mov	sp, r7
  800167a:	e8bd 0890 	ldmia.w	sp!, {r4, r7, fp}
  800167e:	4770      	bx	lr
- 8001680:	2000010c 	.word	0x2000010c
+ 8001680:	20000110 	.word	0x20000110
  8001684:	20000050 	.word	0x20000050
 
 08001688 <Error_Handler>:
@@ -3090,7 +3090,7 @@ LoopFillZerobss:
   ldr  r2, =_sbss
  80019a8:	20000028 	.word	0x20000028
   ldr  r3, = _ebss
- 80019ac:	20000190 	.word	0x20000190
+ 80019ac:	2000019c 	.word	0x2000019c
 
 080019b0 <ADC_IRQHandler>:
  * @retval None       
@@ -3253,7 +3253,7 @@ __weak void HAL_IncTick(void)
  8001a74:	4770      	bx	lr
  8001a76:	bf00      	nop
  8001a78:	20000020 	.word	0x20000020
- 8001a7c:	2000018c 	.word	0x2000018c
+ 8001a7c:	20000198 	.word	0x20000198
 
 08001a80 <HAL_GetTick>:
   * @note This function is declared as __weak to be overwritten in case of other 
@@ -3273,7 +3273,7 @@ __weak uint32_t HAL_GetTick(void)
  8001a8c:	f85d 7b04 	ldr.w	r7, [sp], #4
  8001a90:	4770      	bx	lr
  8001a92:	bf00      	nop
- 8001a94:	2000018c 	.word	0x2000018c
+ 8001a94:	20000198 	.word	0x20000198
 
 08001a98 <__NVIC_SetPriorityGrouping>:
            In case of a conflict between priority grouping and available
