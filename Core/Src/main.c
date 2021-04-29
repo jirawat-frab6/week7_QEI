@@ -19,6 +19,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "math.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -139,7 +140,7 @@ int main(void)
 		  encoder_vel = (encoder_vel*99 + pps_to_rpm(encoder_velocity_update()))/100.0; //low pass filter
 
 		  motor_direction(target_vel);
-		  output = PID_control(target_vel, encoder_vel, 1000*1e-6);
+		  output = PID_control(target_vel, fabs(encoder_vel), 1000*1e-6);
 		  __HAL_TIM_SET_COMPARE(&htim3,TIM_CHANNEL_1,output);
 		  //__HAL_TIM_SET_COMPARE(&htim3,TIM_CHANNEL_1,10000);
 		  //__HAL_TIM_SET_COMPARE(&htim1,TIM_CHANNEL_1,PWMoutput);
