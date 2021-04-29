@@ -50,7 +50,7 @@ UART_HandleTypeDef huart2;
 /* USER CODE BEGIN PV */
 
 uint64_t timestamp_encoder = 0,_micro = 0;
-double Kp = 28000,Ki = 10,Kd = 5;
+double Kp = 28000,Ki = 5,Kd = 10;
 double encoder_vel = 0,target_vel = 0;
 uint16_t output  = 0;
 /* USER CODE END PV */
