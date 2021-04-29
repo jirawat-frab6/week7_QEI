@@ -69,7 +69,6 @@ double encoder_velocity_update();
 uint16_t PID_control();
 double pps_to_rpm();
 void motor_direction();
-double a;
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
