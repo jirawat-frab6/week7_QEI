@@ -19,7 +19,6 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "math.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -51,7 +50,7 @@ UART_HandleTypeDef huart2;
 
 uint64_t timestamp_encoder = 0,_micro = 0;
 double Kp = 28000,Ki = 5,Kd = 10;
-double encoder_vel = 0,target_vel = 0;
+double encoder_vel = 0,target_vel = 10;
 uint16_t output  = 0;
 /* USER CODE END PV */
 
@@ -137,6 +136,7 @@ int main(void)
 	  if(micros() - timestamp_encoder > 1000){ //uS
 		  timestamp_encoder = micros();
 		  encoder_vel = (encoder_vel*99 + pps_to_rpm(encoder_velocity_update()))/100.0; //low pass filter
+		  //encoder_vel = encoder_velocity_update();
 
 		  motor_direction(target_vel);
 		  output = PID_control(fabs(target_vel), fabs(encoder_vel), 1000*1e-6);
@@ -466,14 +466,24 @@ double encoder_velocity_update(){
 	return (double)encoder_position_diff*1e6/(double)encoder_time_diff;
 }
 
-double previous_error = 0,integral = 0;
+//double previous_error = 0,integral = 0;
+double pu1=0,pe1=0,pe2=0;
 uint16_t PID_control(double setpoint ,double measure_value,double dt){
-	double error =  setpoint - measure_value;
+	/*double error =  setpoint - measure_value;
 	integral += error*dt;
 	double derivative = (error - previous_error)/dt;
 	double output = Kp* error + Ki * integral + Kd * derivative;
 	previous_error = error;
+	return output;*/
+
+	double error = setpoint - measure_value;
+	double output = pu1+(Kp+Ki+Kd)*error-(Kp+2*Kd)*pe1+(Kd*pe2);
+	pu1 = output;
+	pe2 = pe1;
+	pe1 = error;
 	return output;
+
+
 }
 
 double pps_to_rpm(double input){
